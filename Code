@@ -1,0 +1,61 @@
+import cv2
+import numpy as np
+
+# Load Image
+image=cv2.imread("circle_ellipse.png",0)
+cv2.imshow("Original",image)
+cv2.waitKey(0)
+
+# Intialise the detector using blob parameter
+detector=cv2.SimpleBlobDetector()
+
+# detect blobs
+keypoints=detector.detect(image)
+
+# Draw blobs on image as red circles
+blank=np.zeros((1,1))
+blobs=cv2.drawKeypoints(image,keypoints,blank,(0,0,255),cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+number_of_blobs=len(keypoints)
+text="Total Number of Blobs :"+str(len(keypoints))
+cv2.putText(blobs,text,(20,550),cv2.FONT_HERSHEY_SIMPLEX,1,(100,0,255),2)
+
+# Display Image with Keypoints
+cv2.imshow("blobs using default parameters",blobs)
+cv2.waitKey(0)
+
+# set our filtering parameters
+# Intitialise parameter setting using cv2.simpleBlobDetector
+params=cv2.SimpleBlobDetector_Params()
+
+# Set area filtering parameters
+params.filterByArea=True
+params.minArea=100
+
+# Set circularity filtering parameters
+params.filterByCircularity=True
+params.minCircularity=0.9
+
+# Set Convexity filtering parameters
+params.filterByConvexity=False
+params.minConvexity=0.2
+
+# Set intertia filtering parameters
+params.filterByInertia=True
+params.minInertiaRatio=0.01
+
+# Create a detector with parameters
+detector=cv2.SimpleBlobDetector(params)
+
+# detect blobs
+keypoints=detector.detect(image)
+
+# Draw blobs on image as green circles
+blank=np.zeros((1,1))
+blobs=cv2.drawKeypoints(image,keypoints,blank,(0,255,0),cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+number_of_blobs=len(keypoints)
+text="Total Number of Circles :"+str(len(keypoints))
+cv2.putText(blobs,text,(20,550),cv2.FONT_HERSHEY_SIMPLEX,1,(100,0,255),2)
+
+cv2.imshow("number of circles",blobs)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
